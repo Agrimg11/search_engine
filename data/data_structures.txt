@@ -1,0 +1,13 @@
+Data Structures: Trees, Hash Tables, and Graphs
+
+A data structure is a way of organizing and storing data so that it can be accessed and modified efficiently. Choosing the right data structure is critical for writing performant software.
+
+Binary Search Trees (BST) store elements in sorted order, enabling O(log n) average-case search, insertion, and deletion. However, a BST can degenerate into a linked list if elements are inserted in sorted order, resulting in O(n) worst-case operations. Self-balancing trees such as AVL trees and Red-Black trees guarantee O(log n) height by performing rotations after insertions and deletions.
+
+A hash table provides O(1) average-case lookup, insertion, and deletion by mapping keys to array indices through a hash function. Collisions occur when two keys hash to the same index. Common collision resolution strategies include chaining (using linked lists at each bucket) and open addressing (probing for the next available slot). The load factor, defined as the number of elements divided by the number of buckets, determines when the table should be resized.
+
+A trie, also called a prefix tree, is a tree-like data structure used for efficient retrieval of keys in a dataset of strings. Each node represents a character, and paths from root to leaf represent complete words. Tries are widely used in autocomplete systems, spell checkers, and IP routing. The time complexity for search and insertion is O(L) where L is the length of the key, independent of the number of stored keys.
+
+Graphs consist of vertices (nodes) connected by edges. They can be directed or undirected, weighted or unweighted. Common representations include adjacency matrices (O(V^2) space) and adjacency lists (O(V+E) space). Graph traversal algorithms like Breadth-First Search (BFS) and Depth-First Search (DFS) are fundamental building blocks. BFS explores all neighbors at the current depth before moving deeper, while DFS explores as deep as possible before backtracking.
+
+Heaps are complete binary trees that satisfy the heap property: in a max-heap, every parent is greater than or equal to its children. Heaps support O(log n) insertion and extraction of the maximum element, making them ideal for priority queues. The heapify operation builds a heap from an unsorted array in O(n) time, which is used by Heapsort. A min-heap is used in algorithms like Dijkstra's shortest path, where the minimum-cost node must be efficiently retrieved.

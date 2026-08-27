@@ -1,0 +1,15 @@
+Database Systems: Indexing, Transactions, and Query Processing
+
+A database management system (DBMS) provides efficient storage, retrieval, and management of structured data. Relational databases organize data into tables with rows and columns, using SQL (Structured Query Language) for data manipulation and querying.
+
+Indexing is a crucial technique for speeding up database queries. A B-tree index maintains sorted data and allows search, insertion, and deletion in O(log n) time. B+ trees, a variation where all data resides in leaf nodes connected by pointers, are the most common index structure in relational databases because they support efficient range queries and sequential scans.
+
+Hash indexes provide O(1) average-case point lookups but do not support range queries. Bitmap indexes are efficient for columns with low cardinality (few distinct values) and are commonly used in data warehousing. Full-text indexes use inverted index structures to enable keyword search across text columns.
+
+Transactions ensure data integrity through the ACID properties: Atomicity (all or nothing), Consistency (valid state transitions), Isolation (concurrent transactions don't interfere), and Durability (committed data persists). Concurrency control mechanisms like two-phase locking (2PL) and multi-version concurrency control (MVCC) allow multiple transactions to execute simultaneously while maintaining correctness.
+
+Query processing involves parsing the SQL statement, generating a query plan, optimizing it, and executing it. The query optimizer evaluates different execution strategies using cost models that consider factors like table sizes, index availability, and join selectivity. Common join algorithms include nested-loop join, hash join, and sort-merge join.
+
+NoSQL databases provide alternatives to relational databases for specific use cases. Document stores like MongoDB store JSON-like documents. Key-value stores like Redis provide fast in-memory caching. Column-family stores like Cassandra are designed for high write throughput. Graph databases like Neo4j excel at traversing relationships between entities.
+
+Database replication and sharding are techniques for scaling databases. Replication copies data across multiple servers for fault tolerance and read scalability. Sharding partitions data across servers to distribute write load and storage. Consistent hashing is often used to determine which shard holds a given piece of data.

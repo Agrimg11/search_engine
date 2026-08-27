@@ -1,0 +1,15 @@
+Operating Systems: Process Scheduling and Memory Management
+
+Process scheduling is a fundamental responsibility of an operating system. The OS scheduler decides which process gets to use the CPU and for how long. There are several scheduling algorithms, each with different trade-offs between throughput, latency, and fairness.
+
+First-Come First-Served (FCFS) is the simplest scheduling algorithm. Processes are executed in the order they arrive in the ready queue. While easy to implement, FCFS suffers from the convoy effect, where short processes get stuck behind long-running ones, leading to poor average waiting time.
+
+Shortest Job First (SJF) selects the process with the smallest burst time next. It provides the optimal average waiting time but requires knowing burst times in advance, which is often impractical. The preemptive version, Shortest Remaining Time First (SRTF), can interrupt a running process if a new process with a shorter burst arrives.
+
+Round Robin (RR) assigns each process a fixed time quantum. When a process exhausts its quantum, it is moved to the back of the ready queue. Round Robin provides good response time for interactive systems but may suffer from high context-switching overhead if the quantum is too small.
+
+Priority Scheduling assigns a priority value to each process. The CPU is allocated to the process with the highest priority. A major issue is starvation, where low-priority processes may never execute. Aging is a technique used to gradually increase the priority of waiting processes to prevent starvation.
+
+Memory management is another critical OS function. Virtual memory allows processes to use more memory than physically available by using a combination of RAM and disk storage. The page replacement algorithm determines which pages to swap out when physical memory is full. Common algorithms include FIFO, LRU (Least Recently Used), and Optimal page replacement.
+
+Deadlock occurs when two or more processes are blocked forever, each waiting for a resource held by the other. The four necessary conditions for deadlock are: mutual exclusion, hold and wait, no preemption, and circular wait. The Banker's Algorithm is a deadlock avoidance strategy that checks whether granting a resource request will leave the system in a safe state.

@@ -1,0 +1,15 @@
+Algorithms: Sorting, Searching, and Dynamic Programming
+
+Algorithm design is central to computer science. An algorithm is a step-by-step procedure for solving a problem, and its efficiency is measured by time complexity and space complexity using Big-O notation.
+
+Sorting Algorithms arrange elements in a specific order. Comparison-based sorts like Merge Sort and Quick Sort achieve O(n log n) average-case time complexity. Merge Sort divides the array in half, recursively sorts each half, and merges the results. It is stable and guarantees O(n log n) in all cases but requires O(n) extra space. Quick Sort selects a pivot, partitions elements around it, and recursively sorts the partitions. Its average case is O(n log n) but worst case is O(n^2) when the pivot selection is poor.
+
+Non-comparison sorts like Counting Sort, Radix Sort, and Bucket Sort can achieve O(n) time by exploiting properties of the input data, such as a limited range of integer values.
+
+Binary Search is an efficient algorithm for finding an element in a sorted array. It repeatedly halves the search space by comparing the target with the middle element. Time complexity is O(log n). Binary search is also used as a technique in optimization problems, such as finding the minimum capacity to ship packages within a given number of days.
+
+Dynamic Programming (DP) is an optimization technique that solves complex problems by breaking them into overlapping subproblems. It stores the results of subproblems to avoid redundant computation. Classic DP problems include the Fibonacci sequence, the Knapsack problem, Longest Common Subsequence, and Edit Distance.
+
+The top-down approach (memoization) uses recursion with a cache, while the bottom-up approach (tabulation) fills a table iteratively. DP is widely used in string matching, resource allocation, shortest path algorithms, and sequence alignment in bioinformatics.
+
+Graph algorithms like Dijkstra's algorithm find the shortest path from a source to all other vertices in a weighted graph with non-negative edges. It uses a priority queue (min-heap) and runs in O((V + E) log V) time. The Bellman-Ford algorithm handles negative edge weights and detects negative cycles, running in O(V * E) time.

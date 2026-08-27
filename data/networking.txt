@@ -1,0 +1,15 @@
+Computer Networking: Protocols, Layers, and Security
+
+Computer networking enables communication between devices. The OSI (Open Systems Interconnection) model divides network communication into seven layers: Physical, Data Link, Network, Transport, Session, Presentation, and Application. The TCP/IP model simplifies this into four layers: Network Interface, Internet, Transport, and Application.
+
+TCP (Transmission Control Protocol) is a connection-oriented protocol that provides reliable, ordered delivery of data. It uses a three-way handshake (SYN, SYN-ACK, ACK) to establish a connection and implements flow control through sliding window mechanisms. TCP also provides congestion control using algorithms like slow start, congestion avoidance, fast retransmit, and fast recovery.
+
+UDP (User Datagram Protocol) is a connectionless protocol that provides best-effort delivery without guarantees of order or reliability. It has lower overhead than TCP and is preferred for real-time applications like video streaming, VoIP, and online gaming where low latency is more important than perfect delivery.
+
+IP (Internet Protocol) is responsible for addressing and routing packets across networks. IPv4 uses 32-bit addresses, providing approximately 4.3 billion unique addresses. IPv6 extends this to 128 bits, providing a vastly larger address space. Subnetting divides a network into smaller subnetworks using subnet masks, enabling efficient IP address allocation and routing.
+
+DNS (Domain Name System) translates human-readable domain names into IP addresses. It uses a hierarchical structure with root servers, top-level domain servers, and authoritative name servers. DNS queries can be recursive or iterative, and caching at multiple levels reduces lookup latency.
+
+HTTP (Hypertext Transfer Protocol) is the foundation of web communication. HTTP/1.1 introduced persistent connections and pipelining. HTTP/2 added multiplexing, header compression, and server push. HTTP/3 uses QUIC (based on UDP) for reduced connection establishment latency and improved performance on unreliable networks.
+
+Network security involves protecting data during transmission. TLS (Transport Layer Security) encrypts communication between client and server using symmetric encryption for data transfer and asymmetric encryption for key exchange. Firewalls filter network traffic based on rules, while intrusion detection systems (IDS) monitor for suspicious activity.
