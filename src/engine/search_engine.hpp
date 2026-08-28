@@ -7,6 +7,10 @@
 /// terms, top_k).  On a cache HIT the BM25 + heap pipeline is bypassed
 /// entirely; results are returned in O(1) average time.
 ///
+/// Phase 2.3 addition: a Trie (prefix tree) built from the inverted index
+/// vocabulary.  It powers the autocomplete / suggest feature: given a prefix,
+/// it returns up to `limit` matching terms ranked by document frequency.
+///
 /// Users interact only with SearchEngine; the internal components are
 /// hidden behind a clean public API.
 
@@ -15,6 +19,7 @@
 #include "core/inverted_index.hpp"
 #include "core/lru_cache.hpp"
 #include "core/tokenizer.hpp"
+#include "core/trie.hpp"
 
 #include <algorithm>   // std::sort
 #include <cstddef>
@@ -126,6 +131,16 @@ public:
     /// are evicted.  Passing 0 disables caching and clears all entries.
     void set_cache_capacity(std::size_t new_cap);
 
+    // ── Suggest / Autocomplete ───────────────────────────────────────────
+    /// Return up to `limit` vocabulary terms starting with `prefix`,
+    /// ranked by document frequency (descending) then lexicographically.
+    ///
+    /// Delegates to the internal Trie built from the inverted index vocabulary.
+    /// Returns an empty vector if the prefix is not found, contains invalid
+    /// characters, or limit == 0.
+    [[nodiscard]] std::vector<std::pair<std::string, std::size_t>>
+    suggest(const std::string& prefix, std::size_t limit = 10) const;
+
     // ── Individual cache stat accessors ─────────────────────────────────
     [[nodiscard]] std::size_t cache_capacity() const noexcept;
 
@@ -151,6 +166,17 @@ private:
     // Key   : QueryKey { sorted normalised tokens, top_k }
     // Value : vector<SearchResult> — a copy of the final ranked list
     mutable LRUCache<QueryKey, std::vector<SearchResult>, QueryKeyHash> cache_;
+
+    // ── Trie (autocomplete) ──────────────────────────────────────────────
+    // Built from the inverted index vocabulary after each full ingestion.
+    // Not mutable: suggest() is a const read operation; the Trie is only
+    // modified in non-const ingestion methods.
+    Trie vocab_trie_;
+
+    /// Rebuild the Trie from the current inverted index vocabulary.
+    /// Called internally after every directory ingestion (once, not per-file)
+    /// and after every single-document ingestion to keep the Trie in sync.
+    void rebuild_trie();
 };
 
 } // namespace search

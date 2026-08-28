@@ -12,6 +12,7 @@ add_library(search_lib
     src/core/tokenizer.cpp
     src/core/inverted_index.cpp
     src/core/bm25.cpp
+    src/core/trie.cpp
     src/engine/search_engine.cpp
     src/vendor/linenoise/linenoise.c
 )
@@ -45,4 +46,5 @@ if(BUILD_TESTS)
     add_search_test(test_bm25           tests/test_bm25.cpp)
     add_search_test(test_topk_heap      tests/test_topk_heap.cpp)  # Phase 2.1
     add_search_test(test_lru_cache      tests/test_lru_cache.cpp)  # Phase 2.2
+    add_search_test(test_trie           tests/test_trie.cpp)        # Phase 2.3
 endif()

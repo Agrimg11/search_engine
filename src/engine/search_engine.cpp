@@ -23,6 +23,9 @@ uint32_t SearchEngine::ingest(const std::string& title, const std::string& conte
     // Clear the cache so the next query always reflects the current corpus.
     cache_.clear();
 
+    // Rebuild the Trie to include any new vocabulary terms from this document.
+    rebuild_trie();
+
     return doc_id;
 }
 
@@ -44,10 +47,23 @@ std::size_t SearchEngine::ingest_directory(const std::filesystem::path& dir_path
         std::ostringstream buf;
         buf << file.rdbuf();
 
-        // ingest() calls cache_.clear() internally after each document.
-        ingest(entry.path().stem().string(), buf.str());
+        // Temporarily bypass per-document Trie rebuilds for performance:
+        // we rebuild once after the directory is fully ingested (see below).
+        // We still need cache invalidation, so call the underlying primitives
+        // directly instead of ingest(), then call rebuild_trie() once.
+        uint32_t doc_id = store_.add_document(entry.path().stem().string(), buf.str());
+        auto tokens     = tokenizer_.tokenize(buf.str());
+        store_.update_token_count(doc_id, static_cast<uint32_t>(tokens.size()));
+        index_.add_document(doc_id, tokens);
+        cache_.clear();
         ++count;
     }
+
+    // Rebuild the Trie once after all documents are indexed — O(V) instead of O(N·V).
+    if (count > 0) {
+        rebuild_trie();
+    }
+
     return count;
 }
 
@@ -114,5 +130,19 @@ void SearchEngine::set_cache_capacity(std::size_t new_cap) {
 // ── Individual cache stat accessors ──────────────────────────────────────────
 
 std::size_t SearchEngine::cache_capacity() const noexcept { return cache_.capacity(); }
+
+// ── Trie (autocomplete) ──────────────────────────────────────────────────
+
+void SearchEngine::rebuild_trie() {
+    vocab_trie_.clear();
+    for (const auto& [term, postings] : index_.vocabulary()) {
+        vocab_trie_.insert(term, postings.size());  // postings.size() == document_frequency
+    }
+}
+
+std::vector<std::pair<std::string, std::size_t>>
+SearchEngine::suggest(const std::string& prefix, std::size_t limit) const {
+    return vocab_trie_.autocomplete(prefix, limit);
+}
 
 } // namespace search

@@ -13,7 +13,8 @@ A high-performance, in-memory text search engine built in C++. This project impl
 ## Architecture & Phases
 
 - **Phase 1:** Basic Tokenization, Inverted Index, and BM25 Scoring.
-- **Phase 2.2 (Current):** Introduced an LRU Cache to bypass heavy computations for identical queries, and a Min-Heap for highly optimized Top-K extraction.
+- **Phase 2.2:** Introduced an LRU Cache to bypass heavy computations for identical queries, and a Min-Heap for highly optimized Top-K extraction.
+- **Phase 2.3 (Current):** Added a Trie-based Autocomplete feature that suggests query completions ranked by document frequency, hooked into the CLI's Tab-completion and `:suggest` command.
 
 ## Build Instructions
 
@@ -36,7 +37,9 @@ To run the interactive CLI:
 ```
 
 Once in the interactive prompt, you can type queries or use special commands:
+- `Tab`: Hit the Tab key while typing a word to instantly see autocomplete suggestions!
 - `:top <K> <query>`: Get the top K results.
 - `:stats <word>`: See document frequencies for a specific term.
 - `:explain <query>`: See the BM25 math breakdown for each result.
 - `:cache`: Display hit/miss rates and current LRU cache statistics.
+- `:suggest <prefix>`: Manually retrieve up to 5 autocomplete suggestions for a given prefix.

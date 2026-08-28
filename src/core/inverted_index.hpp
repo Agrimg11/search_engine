@@ -42,6 +42,11 @@ public:
     /// Check whether a term exists in the index.
     [[nodiscard]] bool contains(const std::string& term) const;
 
+    /// Read-only view of the entire vocabulary (term → posting list).
+    /// Used by SearchEngine to iterate all indexed terms for Trie construction.
+    [[nodiscard]] const std::unordered_map<std::string, std::vector<Posting>>&
+    vocabulary() const noexcept { return index_; }
+
 private:
     std::unordered_map<std::string, std::vector<Posting>> index_;
     std::size_t doc_count_{0};

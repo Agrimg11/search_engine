@@ -10,6 +10,24 @@
 
 #include "vendor/linenoise/linenoise.h"
 
+// ── Globals for the linenoise completion callback ─────────────────────────────
+// linenoise uses a C-style function pointer for completions; we cannot capture
+// a local variable in a C function pointer.  A module-level pointer to the
+// SearchEngine is the simplest safe solution for a single-threaded program.
+static const search::SearchEngine* g_engine = nullptr;
+
+static void completion_callback(const char* buf, linenoiseCompletions* lc) {
+    if (g_engine == nullptr) return;
+    // Skip special commands — only autocomplete plain search queries.
+    std::string prefix(buf ? buf : "");
+    if (!prefix.empty() && prefix[0] == ':') return;
+
+    auto suggestions = g_engine->suggest(prefix, 5);
+    for (const auto& [term, df] : suggestions) {
+        linenoiseAddCompletion(lc, term.c_str());
+    }
+}
+
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
 static void display_results(const std::vector<search::SearchResult>& results,
@@ -83,8 +101,8 @@ int main(int argc, char* argv[]) {
     // Banner
     std::cout << "\n"
               << "╔══════════════════════════════════════════════╗\n"
-              << "║   Fast Hybrid Search Engine  v2.1           ║\n"
-              << "║   Phase 2.2 — LRU Cache + Top-K Heap       ║\n"
+              << "║   Fast Hybrid Search Engine  v2.3            ║\n"
+              << "║   Phase 2.3 — Trie-Based Autocomplete        ║\n"
               << "╚══════════════════════════════════════════════╝\n\n";
 
     // Ingest
@@ -110,9 +128,15 @@ int main(int argc, char* argv[]) {
     std::cout << "\n  Type a search query (or 'quit' to exit):\n"
               << "  [Tip: Type ':stats <word>' to see document frequencies for a specific term]\n"
               << "  [Tip: Type ':top <K> <query>' to retrieve a specific number of results]\n"
-              << "  [Tip: Type ':cache' to display LRU cache statistics]\n";
+              << "  [Tip: Type ':cache' to display LRU cache statistics]\n"
+              << "  [Tip: Type ':suggest <prefix>' to see autocomplete suggestions]\n"
+              << "  [Tip: Tab-completion is available while typing a query]\n";
     std::string query;
     linenoiseHistorySetMaxLen(100);
+    // Register the completion callback so Tab-completions are available
+    // while the user types a query.
+    g_engine = &engine;
+    linenoiseSetCompletionCallback(completion_callback);
 
     while (true) {
         std::cout << "\n";
@@ -149,6 +173,28 @@ int main(int argc, char* argv[]) {
                               << "\nFinal BM25 = " << expl.final_score << "\n"
                               << std::string(40, '-') << "\n";
                 }
+            }
+            continue;
+        }
+
+        if (query.substr(0, 9) == ":suggest ") {
+            std::string prefix = query.substr(9);
+            if (prefix.empty()) {
+                std::cout << "  [!] Usage: :suggest <prefix>\n";
+                continue;
+            }
+            auto suggestions = engine.suggest(prefix, 5);
+            if (suggestions.empty()) {
+                std::cout << "  No suggestions found for prefix: '" << prefix << "'\n";
+            } else {
+                std::cout << "\n  Suggestions:\n";
+                std::cout << "  " << std::string(36, '-') << "\n";
+                for (const auto& [term, df] : suggestions) {
+                    // Left-align the term in a 20-character field, then print the DF.
+                    std::cout << "  " << std::left << std::setw(20) << term
+                              << " DF=" << df << "\n";
+                }
+                std::cout << "\n";
             }
             continue;
         }
