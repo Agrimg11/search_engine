@@ -39,7 +39,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).parent))
 from engine.search_engine import SearchEngine
 from engine.embedder      import OllamaEmbedder
 from rag_pipeline          import RAGPipeline
-from routers               import health, search, rag, ingest, documents
+from routers               import health, search, rag, ingest, documents, benchmark
 import config
 
 
@@ -115,6 +115,7 @@ app.include_router(search.router)
 app.include_router(rag.router)
 app.include_router(ingest.router)
 app.include_router(documents.router)
+app.include_router(benchmark.router)
 
 # Serve the frontend — must be mounted AFTER all API routes.
 _STATIC_DIR = pathlib.Path(__file__).parent / "static"
